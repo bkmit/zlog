@@ -27,7 +27,7 @@ BINS=zlog-chk-conf
 LIBNAME=libzlog
 
 ZLOG_MAJOR=1
-ZLOG_MINOR=1
+ZLOG_MINOR=2
 
 # Fallback to gcc when $CC is not in $PATH.
 CC:=$(shell sh -c 'type $(CC) >/dev/null 2>/dev/null && echo $(CC) || echo gcc')
@@ -50,7 +50,7 @@ STLIB_MAKE_CMD=ar rcs $(STLIBNAME)
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 ifeq ($(uname_S),SunOS)
 #  REAL_LDFLAGS+= -ldl -lnsl -lsocket
-  DYLIB_MAKE_CMD=$(CC) -G -o $(DYLIBNAME) -h $(DYLIB_MINOR_NAME) $(LDFLAGS)
+  DYLIB_MAKE_CMD=$(CC) -G -shared -o $(DYLIBNAME) -h $(DYLIB_MINOR_NAME) $(LDFLAGS)
   INSTALL= cp -r
 endif
 ifeq ($(uname_S),Darwin)
