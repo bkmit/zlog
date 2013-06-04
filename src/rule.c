@@ -581,17 +581,27 @@ zlog_rule_t *zlog_rule_new(char *line,
 	a_rule->file_perms = file_perms;
 	a_rule->fsync_period = fsync_period;
 
-	/* line         [f.INFO "%H/log/aa.log", 20MB * 12; MyTemplate]
+	/* line         [f.INFO = "%H/log/aa.log", 20MB * 12; MyTemplate]
 	 * selector     [f.INFO]
 	 * *action      ["%H/log/aa.log", 20MB * 12; MyTemplate]
 	 */
 	memset(&selector, 0x00, sizeof(selector));
-	nscan = sscanf(line, "%s %n", selector, &nread);
+	nscan = sscanf(line, "%s = %n", selector, &nread);
 	if (nscan != 1) {
 		zc_error("sscanf [%s] fail, selector", line);
 		goto err;
 	}
 	action = line + nread;
+	/* line         [f.=INFO = "%H/log/aa.log", 20MB * 12; MyTemplate] */
+	if (selector[len = strlen(selector) - 1] == '.') {
+		selector[len++] = '=';
+		nscan = sscanf(line, "%s = %n", &selector[len], &nread);
+		if (nscan != 1) {
+			zc_error("sscanf [%s] fail, selector", line);
+			goto err;
+		}
+		action = line + nread;
+	}
 
 	/*
 	 * selector     [f.INFO]

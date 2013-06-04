@@ -242,7 +242,7 @@ static int zlog_conf_build_with_file(zlog_conf_t * a_conf)
 	int in_quotation = 0;
 
 	int section = 0;
-	/* [global:1] [levels:2] [formats:3] [rules:4] */
+	/* [global:1] [levels:2] [formats:3] [rules:4] [*:99] */
 
 	if (lstat(a_conf->file, &a_stat)) {
 		zc_error("lstat conf file[%s] fail, errno[%d]", a_conf->file,
@@ -339,7 +339,7 @@ exit:
 	return rc;
 }
 
-/* section [global:1] [levels:2] [formats:3] [rules:4] */
+/* section [global:1] [levels:2] [formats:3] [rules:4] [*:99] */
 static int zlog_conf_parse_line(zlog_conf_t * a_conf, char *line, int *section)
 {
 	int nscan;
@@ -371,12 +371,13 @@ static int zlog_conf_parse_line(zlog_conf_t * a_conf, char *line, int *section)
 		} else if (STRCMP(name, ==, "rules")) {
 			*section = 4;
 		} else {
-			zc_error("wrong section name[%s]", name);
-			return -1;
+			*section = 99;
+			zc_warn("foreign section name[%s], skipping to EOF", name);
+			return 0;
 		}
 		/* check the sequence of section, must increase */
 		if (last_section >= *section) {
-			zc_error("wrong sequence of section, must follow global->levels->formats->rules");
+			zc_error("wrong sequence of section, must follow global->levels->formats->rules->all others");
 			return -1;
 		}
 
@@ -505,6 +506,8 @@ static int zlog_conf_parse_line(zlog_conf_t * a_conf, char *line, int *section)
 			return -1;
 		}
 		break;
+	case 99:
+		break; /* skipping foreign sections */
 	default:
 		zc_error("not in any section");
 		return -1;
