@@ -65,21 +65,21 @@ int zc_profile_inner(int flag, const char *file, const long line, const char *fm
 		fp = fopen(debug_log, "a");
 		if (!fp) return -1;
 		zc_time(time_str, sizeof(time_str));
-		fprintf(fp, "%s DEBUG (%d:%s:%ld) ", time_str, getpid(), file, line);
+		fprintf(fp, "%s DEBUG (%u:%s:%ld) ", time_str, (unsigned)getpid(), file, line);
 		break;
 	case ZC_WARN:
  		if (error_log == NULL) return 0;
 		fp = fopen(error_log, "a");
 		if (!fp) return -1;
 		zc_time(time_str, sizeof(time_str));
-		fprintf(fp, "%s WARN  (%d:%s:%ld) ", time_str, getpid(), file, line);
+		fprintf(fp, "%s WARN  (%u:%s:%ld) ", time_str, (unsigned)getpid(), file, line);
 		break;
 	case ZC_ERROR:
  		if (error_log == NULL) return 0;
 		fp = fopen(error_log, "a");
 		if (!fp) return -1;
 		zc_time(time_str, sizeof(time_str));
-		fprintf(fp, "%s ERROR (%d:%s:%ld) ", time_str, getpid(), file, line);
+		fprintf(fp, "%s ERROR (%u:%s:%ld) ", time_str, (unsigned)getpid(), file, line);
 		break;
 	}
 
