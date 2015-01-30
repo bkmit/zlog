@@ -8,13 +8,14 @@ zlog是一个高可靠性、高性能、线程安全、灵活、概念清晰的�
 
 1.安装
 
-下载：https://code.google.com/p/hardysimpson-zlog/downloads/list
+下载：https://github.com/HardySimpson/zlog/releases
 
 $ tar -zxvf zlog-latest-stable.tar.gz
 $ cd zlog-latest-stable/
 $ make 
 $ sudo make install
 or
+$ make PREFIX=/usr/local/
 $ sudo make PREFIX=/usr/local/ install
 
 PREFIX指明了安装的路径，安转完之后为了让你的程序能找到zlog动态库
@@ -66,7 +67,7 @@ int main(int argc, char** argv)
         }
 
         c = zlog_get_category("my_cat");
-        if (!my_cat) {
+        if (!c) {
                 printf("get cat fail\n");
                 zlog_fini();
                 return -2;
@@ -102,7 +103,7 @@ hello, zlog
 
 6.相关链接
 主页：http://hardysimpson.github.com/zlog/
-软件下载：https://code.google.com/p/hardysimpson-zlog/downloads/list
+软件下载：https://github.com/HardySimpson/zlog/releases
 作者邮箱：HardySimpson1984@gmail.com
 
 auto tools版本: https://github.com/bmanojlovic/zlog
